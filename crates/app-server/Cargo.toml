@@ -1,0 +1,32 @@
+[package]
+name = "app-server"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "app-server"
+path = "src/main.rs"
+
+[dependencies]
+shared-kernel = { workspace = true }
+catalog-domain = { workspace = true }
+catalog-infra = { workspace = true }
+catalog-api = { workspace = true }
+identity-domain = { workspace = true }
+identity-infra = { workspace = true }
+identity-api = { workspace = true }
+order-domain = { workspace = true }
+order-infra = { workspace = true }
+order-api = { workspace = true }
+payment-domain = { workspace = true }
+payment-infra = { workspace = true }
+payment-api = { workspace = true }
+tokio = { workspace = true }
+axum = { workspace = true }
+sqlx = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+dotenvy = { workspace = true }
+anyhow = { workspace = true }

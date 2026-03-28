@@ -1,0 +1,110 @@
+# generated: 2026-03-28
+# last_updated: 2026-03-28
+# project: passion-market
+# project_key: NOKEY
+# tracking_system: file-system
+# story_location: _bmad-output/implementation-artifacts
+
+# STATUS DEFINITIONS:
+# ==================
+# Epic Status:
+#   - backlog: Epic not yet started
+#   - in-progress: Epic actively being worked on
+#   - done: All stories in epic completed
+#
+# Epic Status Transitions:
+#   - backlog → in-progress: Automatically when first story is created (via create-story)
+#   - in-progress → done: Manually when all stories reach 'done' status
+#
+# Story Status:
+#   - backlog: Story only exists in epic file
+#   - ready-for-dev: Story file created in stories folder
+#   - in-progress: Developer actively working on implementation
+#   - review: Ready for code review (via Dev's code-review workflow)
+#   - done: Story completed
+#
+# Retrospective Status:
+#   - optional: Can be completed but not required
+#   - done: Retrospective has been completed
+#
+# WORKFLOW NOTES:
+# ===============
+# - Epic transitions to 'in-progress' automatically when first story is created
+# - Stories can be worked in parallel if team capacity allows
+# - SM typically creates next story after previous one is 'done' to incorporate learnings
+# - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
+
+generated: 2026-03-28
+last_updated: 2026-03-28T14:00:00Z
+project: passion-market
+project_key: NOKEY
+tracking_system: file-system
+story_location: _bmad-output/implementation-artifacts
+
+development_status:
+  # Epic 1: Socle Projet & Environnement
+  epic-1: in-progress
+  1-1-workspace-cargo-et-environnement-docker-compose: in-progress
+  1-2-application-nextjs-16-et-proxy-vers-lapi-rust: backlog
+  1-3-ci-github-actions-et-deploiement-railway: backlog
+  epic-1-retrospective: optional
+
+  # Epic 2: Identité & Authentification
+  epic-2: backlog
+  2-1-domaine-identity-user-role-et-credentials-tdd: backlog
+  2-2-inscription-maker: backlog
+  2-3-inscription-acheteur: backlog
+  2-4-connexion-et-deconnexion: backlog
+  2-5-reinitialisation-du-mot-de-passe: backlog
+  epic-2-retrospective: optional
+
+  # Epic 3: Profil Maker & Validation Admin
+  epic-3: backlog
+  3-1-domaine-identity-makerprofile-et-evenements-de-validation-tdd: backlog
+  3-2-profil-maker-renseigner-et-modifier: backlog
+  3-3-dashboard-admin-file-de-validation-makers: backlog
+  3-4-approbation-et-refus-maker: backlog
+  epic-3-retrospective: optional
+
+  # Epic 4: Boutique & Gestion Catalogue
+  epic-4: backlog
+  4-1-domaine-catalog-product-shop-productstatus-et-stock-tdd: backlog
+  4-2-creation-de-boutique-maker: backlog
+  4-3-creer-et-enrichir-des-produits: backlog
+  4-4-cycle-de-vie-produit-publication-pause-suppression: backlog
+  4-5-gestion-du-stock-et-transitions-automatiques: backlog
+  4-6-dashboard-maker-interface-de-gestion-catalogue: backlog
+  epic-4-retrospective: optional
+
+  # Epic 5: Storefront & Découverte Publique
+  epic-5: backlog
+  5-1-page-publique-maker: backlog
+  5-2-catalogue-produits-dune-boutique: backlog
+  5-3-fiche-produit-detaillee: backlog
+  epic-5-retrospective: optional
+
+  # Epic 6: Panier, Commande & Paiement
+  epic-6: backlog
+  6-1-domaine-order-cart-order-commission-et-weekend-maker-tdd: backlog
+  6-2-panier-persistant: backlog
+  6-3-checkout-et-paiement-stripe: backlog
+  6-4-commission-et-mecanique-weekend-maker: backlog
+  6-5-emails-de-confirmation-et-notification-maker: backlog
+  6-6-dashboard-maker-commandes-recues: backlog
+  epic-6-retrospective: optional
+
+  # Epic 7: Favoris, Notifications & Communication
+  epic-7: backlog
+  7-1-domaine-catalog-favorite-et-alerte-disponibilite-tdd: backlog
+  7-2-favoris-acheteur: backlog
+  7-3-alerte-disponibilite-favori: backlog
+  7-4-infrastructure-sse-et-notification-rupture-stock-maker: backlog
+  7-5-email-de-relance-panier-abandonne: backlog
+  7-6-infos-expedition-commande: backlog
+  epic-7-retrospective: optional
+
+  # Epic 8: Conformité RGPD & Réglementation
+  epic-8: backlog
+  8-1-politique-de-confidentialite-et-droit-de-retractation: backlog
+  8-2-droit-a-loubli-suppression-des-donnees-personnelles: backlog
+  epic-8-retrospective: optional

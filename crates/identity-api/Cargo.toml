@@ -1,0 +1,17 @@
+[package]
+name = "identity-api"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+identity-domain = { workspace = true }
+shared-kernel = { workspace = true }
+axum = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+
+# NE PAS dépendre de identity-infra — injection via traits domaine (ports.rs)

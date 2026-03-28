@@ -1,0 +1,78 @@
+[workspace]
+members = [
+    "crates/shared-kernel",
+    "crates/catalog-domain",
+    "crates/catalog-infra",
+    "crates/catalog-api",
+    "crates/identity-domain",
+    "crates/identity-infra",
+    "crates/identity-api",
+    "crates/order-domain",
+    "crates/order-infra",
+    "crates/order-api",
+    "crates/payment-domain",
+    "crates/payment-infra",
+    "crates/payment-api",
+    "crates/app-server",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2024"
+version = "0.1.0"
+authors = ["Francois"]
+
+[workspace.dependencies]
+# Async runtime
+tokio = { version = "1", features = ["full"] }
+
+# HTTP
+axum = { version = "0.8", features = ["macros"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+
+# Database
+sqlx = { version = "0.8", features = ["runtime-tokio", "postgres", "uuid", "chrono", "migrate"] }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# IDs
+uuid = { version = "1", features = ["v7", "serde"] }
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Errors
+thiserror = "2"
+anyhow = "1"
+
+# Tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# Messaging (RabbitMQ)
+lapin = "2"
+
+# S3 / MinIO
+aws-sdk-s3 = "1"
+aws-config = "1"
+
+# Config
+dotenvy = "0.15"
+
+# Internal crates
+shared-kernel = { path = "crates/shared-kernel" }
+catalog-domain = { path = "crates/catalog-domain" }
+catalog-infra = { path = "crates/catalog-infra" }
+catalog-api = { path = "crates/catalog-api" }
+identity-domain = { path = "crates/identity-domain" }
+identity-infra = { path = "crates/identity-infra" }
+identity-api = { path = "crates/identity-api" }
+order-domain = { path = "crates/order-domain" }
+order-infra = { path = "crates/order-infra" }
+order-api = { path = "crates/order-api" }
+payment-domain = { path = "crates/payment-domain" }
+payment-infra = { path = "crates/payment-infra" }
+payment-api = { path = "crates/payment-api" }

@@ -1,0 +1,2 @@
+# Enforced in CI: cargo clippy --all-targets -- -D warnings
+# unwrap_used and expect_used are allowed in tests

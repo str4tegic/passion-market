@@ -1,0 +1,17 @@
+[package]
+name = "payment-api"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+payment-domain = { workspace = true }
+shared-kernel = { workspace = true }
+axum = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+thiserror = { workspace = true }
+tracing = { workspace = true }
+
+# NE PAS dépendre de payment-infra — injection via traits domaine (ports.rs)

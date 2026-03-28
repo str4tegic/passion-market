@@ -1,0 +1,12 @@
+[package]
+name = "order-domain"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+shared-kernel = { workspace = true }
+serde = { workspace = true }
+uuid = { workspace = true }
+thiserror = { workspace = true }
+
+# INTERDIT : tokio, sqlx, axum, lapin, aws-sdk-s3
