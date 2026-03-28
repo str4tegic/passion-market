@@ -7,7 +7,7 @@
 | **Story ID** | 1.1 |
 | **Story Key** | `1-1-workspace-cargo-et-environnement-docker-compose` |
 | **Epic** | Epic 1 — Socle Projet & Environnement |
-| **Statut** | in-progress |
+| **Statut** | review |
 | **Date de création** | 2026-03-28 |
 
 ---
@@ -781,10 +781,90 @@ cargo tree -p catalog-domain
 
 ## Définition de "Done"
 
-- [ ] `cargo build --workspace` → vert
-- [ ] `cargo clippy --all-targets -- -D warnings` → vert (zéro warning)
-- [ ] `cargo fmt --all -- --check` → vert (aucune modification)
-- [ ] `docker compose up -d` → PostgreSQL + RabbitMQ + MinIO accessibles
-- [ ] `cargo run -p app-server` → migrations appliquées, 4 schémas créés dans PostgreSQL
-- [ ] `cargo tree -p catalog-domain` → ne contient pas tokio/sqlx/axum
-- [ ] Fichiers `.env.example`, `rustfmt.toml`, `.gitignore` présents
+- [x] `cargo build --workspace` → vert
+- [x] `cargo clippy --all-targets -- -D warnings` → vert (zéro warning)
+- [x] `cargo fmt --all -- --check` → vert (aucune modification)
+- [x] `docker compose up -d` → PostgreSQL + RabbitMQ + MinIO accessibles
+- [x] `cargo run -p app-server` → migrations appliquées, 4 schémas créés dans PostgreSQL
+- [x] `cargo tree -p catalog-domain` → ne contient pas tokio/sqlx/axum
+- [x] Fichiers `.env.example`, `rustfmt.toml`, `.gitignore` présents
+
+---
+
+## Dev Agent Record
+
+### Completion Notes
+
+Implémentation complétée le 2026-03-28 :
+
+- Workspace Cargo transformé depuis une crate unique en workspace 14 membres (`shared-kernel` + 4×3 BCs + `app-server`)
+- Toutes les crates compilent : `cargo build --workspace` ✅
+- Clippy zéro warning : `cargo clippy --all-targets -- -D warnings` ✅
+- Format check passe : `cargo fmt --all -- --check` ✅
+- Docker Compose : PostgreSQL 16, RabbitMQ 3.13-management, MinIO — 3 services up ✅
+- Migrations SQLx : 4 schémas créés automatiquement au démarrage (`catalog`, `identity`, `order`, `payment`) ✅
+- Isolation domaine vérifiée : aucune dépendance tokio/sqlx/axum dans les 4 crates `*-domain` ✅
+
+**Ajustement notable :** `rustfmt.toml` simplifié — les options `imports_granularity` et `group_imports` sont nightly-only sur la toolchain stable utilisée (stable-x86_64-unknown-linux-gnu). Conservé uniquement `edition = "2024"`.
+
+**Ajustement notable :** `#[allow(dead_code)]` sur `AppConfig` pour les champs qui seront utilisés dans les stories 2+.
+
+---
+
+## File List
+
+### Nouveaux fichiers créés
+
+- `Cargo.toml` (modifié — converti en workspace root)
+- `rustfmt.toml`
+- `.clippy.toml`
+- `.env.example`
+- `.gitignore` (modifié)
+- `docker-compose.yml`
+- `docker-compose.test.yml`
+- `migrations/20260328000001_create_catalog_schema.sql`
+- `migrations/20260328000002_create_identity_schema.sql`
+- `migrations/20260328000003_create_order_schema.sql`
+- `migrations/20260328000004_create_payment_schema.sql`
+- `crates/shared-kernel/Cargo.toml`
+- `crates/shared-kernel/src/lib.rs`
+- `crates/shared-kernel/src/ids.rs`
+- `crates/shared-kernel/src/money.rs`
+- `crates/shared-kernel/src/events.rs`
+- `crates/shared-kernel/src/pagination.rs`
+- `crates/catalog-domain/Cargo.toml`
+- `crates/catalog-domain/src/lib.rs`
+- `crates/identity-domain/Cargo.toml`
+- `crates/identity-domain/src/lib.rs`
+- `crates/order-domain/Cargo.toml`
+- `crates/order-domain/src/lib.rs`
+- `crates/payment-domain/Cargo.toml`
+- `crates/payment-domain/src/lib.rs`
+- `crates/catalog-infra/Cargo.toml`
+- `crates/catalog-infra/src/lib.rs`
+- `crates/identity-infra/Cargo.toml`
+- `crates/identity-infra/src/lib.rs`
+- `crates/order-infra/Cargo.toml`
+- `crates/order-infra/src/lib.rs`
+- `crates/payment-infra/Cargo.toml`
+- `crates/payment-infra/src/lib.rs`
+- `crates/catalog-api/Cargo.toml`
+- `crates/catalog-api/src/lib.rs`
+- `crates/identity-api/Cargo.toml`
+- `crates/identity-api/src/lib.rs`
+- `crates/order-api/Cargo.toml`
+- `crates/order-api/src/lib.rs`
+- `crates/payment-api/Cargo.toml`
+- `crates/payment-api/src/lib.rs`
+- `crates/app-server/Cargo.toml`
+- `crates/app-server/src/main.rs`
+- `crates/app-server/src/config.rs`
+- `crates/app-server/src/db.rs`
+
+---
+
+## Change Log
+
+| Date | Description |
+|------|-------------|
+| 2026-03-28 | Story 1.1 implémentée — workspace Cargo 14 crates, Docker Compose, migrations SQLx 4 schémas, isolation domaine vérifiée |

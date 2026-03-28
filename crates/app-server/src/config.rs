@@ -1,5 +1,8 @@
 use anyhow::Result;
 
+/// Configuration globale de l'application.
+/// Les champs seront utilisés dans les stories suivantes (2+).
+#[allow(dead_code)]
 #[derive(Debug)]
 pub struct AppConfig {
     pub database_url: String,
@@ -19,8 +22,7 @@ impl AppConfig {
                 .unwrap_or_else(|_| "amqp://passion:passion@localhost:5672".to_string()),
             s3_endpoint: std::env::var("S3_ENDPOINT")
                 .unwrap_or_else(|_| "http://localhost:9000".to_string()),
-            s3_bucket: std::env::var("S3_BUCKET")
-                .unwrap_or_else(|_| "passion-market".to_string()),
+            s3_bucket: std::env::var("S3_BUCKET").unwrap_or_else(|_| "passion-market".to_string()),
             jwt_secret: std::env::var("JWT_SECRET")
                 .unwrap_or_else(|_| "dev-secret-change-in-prod-minimum-32-chars".to_string()),
             port: std::env::var("PORT")

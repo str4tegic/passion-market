@@ -44,7 +44,7 @@ story_location: _bmad-output/implementation-artifacts
 development_status:
   # Epic 1: Socle Projet & Environnement
   epic-1: in-progress
-  1-1-workspace-cargo-et-environnement-docker-compose: in-progress
+  1-1-workspace-cargo-et-environnement-docker-compose: review
   1-2-application-nextjs-16-et-proxy-vers-lapi-rust: backlog
   1-3-ci-github-actions-et-deploiement-railway: backlog
   epic-1-retrospective: optional
