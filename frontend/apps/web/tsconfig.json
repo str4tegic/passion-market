@@ -1,0 +1,47 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+      "@passion-market/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@passion-market/ui/*": [
+        "../../packages/ui/src/*"
+      ],
+      "@passion-market/api-client": [
+        "../../packages/api-client/src/index.ts"
+      ],
+      "@passion-market/api-client/*": [
+        "../../packages/api-client/src/*"
+      ],
+      "@passion-market/hooks": [
+        "../../packages/hooks/src/index.ts"
+      ],
+      "@passion-market/hooks/*": [
+        "../../packages/hooks/src/*"
+      ]
+    },
+    "allowJs": true,
+    "noEmit": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

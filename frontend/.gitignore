@@ -1,0 +1,9 @@
+node_modules/
+.next/
+dist/
+.env.local
+*.env
+!*.env.example
+.nx/cache/
+.nx/workspace-data/
+*.tsbuildinfo

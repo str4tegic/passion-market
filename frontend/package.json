@@ -1,0 +1,20 @@
+{
+  "name": "passion-market-frontend",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "nx run web:dev",
+    "build": "nx run web:build",
+    "lint": "nx run-many --target=lint --all",
+    "type-check": "nx run-many --target=type-check --all"
+  },
+  "devDependencies": {
+    "nx": "^20.0.0",
+    "@nx/next": "^20.0.0",
+    "@nx/js": "^20.0.0",
+    "typescript": "^5.3.0"
+  }
+}
