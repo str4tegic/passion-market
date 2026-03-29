@@ -160,7 +160,7 @@ export default async function ProductsPage() {
 | Technologie | Version | Notes |
 |-------------|---------|-------|
 | Node.js | 20 LTS | |
-| Next.js | 16.x | App Router obligatoire |
+| Next.js | 15.x | App Router obligatoire |
 | TypeScript | 5.x | strict mode |
 | Tailwind CSS | 3.x | |
 | Nx | 20.x | gestionnaire monorepo |
@@ -511,6 +511,37 @@ Implémentation complétée le 2026-03-28 :
 - `frontend/apps/web/src/app/globals.css`
 - `frontend/apps/web/src/app/layout.tsx`
 - `frontend/apps/web/src/app/page.tsx`
+
+## Review Findings
+
+### Décisions requises (decision-needed)
+
+- [x] [Review][Decision] **Version Next.js : spec alignée sur 15.x** — Next.js 16 n'existe pas. Spec mise à jour pour accepter 15.x (version LTS actuelle avec React 19). [`frontend/apps/web/package.json`] — résolu
+- [x] [Review][Decision] **`main: "./src/index.ts"` dans les package.json des packages** — Accepté pour l'instant (monorepo Next-only). Fonctionne via `transpilePackages`. **Bloquant pour Jest** — un build step (`dist/`) sera nécessaire en story 1.3 avant de configurer les tests. [`frontend/packages/api-client/package.json`, `ui`, `hooks`] — accepté, à adresser en 1.3
+
+### Correctifs (patch)
+
+- [x] [Review][Patch] **SSG non protégée — ajouter `export const dynamic = 'force-static'`** — Sans cette directive, un futur ajout de `cookies()` bascule silencieusement en SSR. CA-3 fragile. [`frontend/apps/web/src/app/page.tsx`] — corrigé
+- [ ] [Review][Patch] **Absence de timeout sur `fetch` — attente indéfinie** — Aucun `AbortController` / `signal`. Requêtes bloquées indéfiniment si le serveur Rust ne répond pas (coût en Serverless). [`frontend/packages/api-client/src/lib/fetch.ts`]
+- [x] [Review][Patch] **`apiGet` options spread permettait d'écraser `cache` et `method`** — `cache` et `method` désormais blacklistés du spread ; l'appelant ne peut plus les écraser. [`frontend/packages/api-client/src/lib/fetch.ts:32`] — corrigé
+- [x] [Review][Patch] **`apiPost`/`apiPatch` : `JSON.stringify` non protégé** — Objet circulaire ou BigInt lèvent un `TypeError` brut. Désormais capturé et converti en `ApiError(0, 'Serialization error', ...)`. [`frontend/packages/api-client/src/lib/fetch.ts`] — corrigé
+- [x] [Review][Patch] **`res.json()` échouait sur corps vide (204 No Content)** — `apiGet`, `apiPost`, `apiPatch` retournent désormais `undefined` sur status 204. [`frontend/packages/api-client/src/lib/fetch.ts`] — corrigé
+- [x] [Review][Patch] **Erreurs réseau (`TypeError: fetch failed`) non capturées** — Comportement documenté par JSDoc sur chaque fonction publique : `@throws {TypeError}` pour les échecs réseau. Gérer au niveau error boundary Next.js (`error.tsx`). [`frontend/packages/api-client/src/lib/fetch.ts`] — documenté, intentionnel
+- [x] [Review][Patch] **`parseError()` non robuste si corps non-JSON** — Déjà couvert par le `try/catch` dans `parseError()` — retourne `ApiError(res.status, res.statusText, '')` sur parse failure. [`frontend/packages/api-client/src/lib/fetch.ts:17-29`] — déjà corrigé dans l'implémentation
+- [x] [Review][Patch] **`API_URL` non validée — trailing slash** — `.env.example` contient un exemple canonique sans trailing slash (`http://localhost:3001`). Convention suffisante. [`frontend/apps/web/.env.example`] — ignoré, convention documentée
+- [x] [Review][Patch] **`MoneyDisplay` accepte des centimes négatifs, floats, NaN, Infinity** — Constructeur valide désormais : entier, positif ou nul, fini. Pas de montants négatifs dans le domaine (avoirs traités dans un champ séparé). [`frontend/packages/ui/src/lib/money.ts:10`] — corrigé
+
+### Différés (defer)
+
+- [x] [Review][Defer] **Proxy expose 100% du backend sans filtrage de routes** — Design intentionnel pour cette architecture (API interne derrière le proxy Next.js). À sécuriser avec une liste blanche quand les routes admin existent. [`frontend/apps/web/next.config.ts`] — deferred, design intentionnel
+- [x] [Review][Defer] **`res.json() as Promise<T>` sans validation runtime** — Pas de Zod ou équivalent. Solution correcte = Zod, hors scope story 1.2. [`frontend/packages/api-client/src/lib/fetch.ts`] — deferred, hors scope
+- [x] [Review][Defer] **`PageParams` sans contraintes de type (page=0, perPage=0)** — Le backend Rust valide. TypeScript ne peut pas exprimer `number >= 1` nativement. Différé. [`frontend/packages/api-client/src/types/common.ts`] — deferred, backend valide
+- [x] [Review][Defer] **`apiDelete` ignore silencieusement le body de la réponse** — Aucun use case actuel. À revisiter quand DELETE retourne des données. — deferred, pas de use case
+- [x] [Review][Defer] **Absence de CSP / headers de sécurité dans `next.config.ts`** — Important pour prod, hors scope story 1.2. À adresser en Story 1.3 (CI/CD) ou avant MVP. — deferred, hors scope
+- [x] [Review][Defer] **`eslint ^8.0.0` trop large** — Épingler à `^8.57.0` minimum. Risque faible. — deferred, low priority
+- [x] [Review][Defer] **`Intl.NumberFormat` crashe sur devise invalide** — Les devises viennent du backend Rust (enum `Currency`) — format ISO 4217 garanti. [`frontend/packages/ui/src/lib/money.ts:16-19`] — deferred, backend garantit le format
+
+---
 
 ## Change Log
 

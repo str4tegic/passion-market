@@ -9,7 +9,11 @@ export class MoneyDisplay {
   constructor(
     private readonly cents: number,
     private readonly currency: string = 'EUR',
-  ) {}
+  ) {
+    if (!Number.isFinite(cents) || cents < 0 || !Number.isInteger(cents)) {
+      throw new RangeError(`MoneyDisplay: cents doit être un entier positif ou nul, reçu: ${cents}`)
+    }
+  }
 
   /** "29,90 €" */
   format(): string {
