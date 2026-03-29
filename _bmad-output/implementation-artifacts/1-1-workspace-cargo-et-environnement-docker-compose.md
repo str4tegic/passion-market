@@ -7,7 +7,7 @@
 | **Story ID** | 1.1 |
 | **Story Key** | `1-1-workspace-cargo-et-environnement-docker-compose` |
 | **Epic** | Epic 1 — Socle Projet & Environnement |
-| **Statut** | review |
+| **Statut** | done |
 | **Date de création** | 2026-03-28 |
 
 ---
@@ -860,6 +860,34 @@ Implémentation complétée le 2026-03-28 :
 - `crates/app-server/src/main.rs`
 - `crates/app-server/src/config.rs`
 - `crates/app-server/src/db.rs`
+
+---
+
+## Review Findings
+
+### Décisions requises (decision-needed)
+
+- [ ] [Review][Decision] **Migrations automatiques au démarrage** — `db::run_migrations()` est appelé inconditionnellement à chaque démarrage de l'app. En prod, cela peut poser des problèmes si plusieurs instances démarrent simultanément. Choix : garder l'auto-migrate (ok pour solo dev), ou exiger `sqlx migrate run` CLI séparément en prod ? [`crates/app-server/src/main.rs:21-23`]
+- [ ] [Review][Decision] **`occurred_at` en `String` au lieu de `DateTime<Utc>`** — Le champ `occurred_at` de `EventEnvelope` est un `String` ISO 8601 bien que `chrono` soit déjà dans les dépendances. Utiliser `DateTime<Utc>` apporterait un typage fort et éviterait les dérives de format. Choix : migrer vers `chrono::DateTime<Utc>` maintenant ou laisser en String ? [`crates/shared-kernel/src/events.rs:7`]
+- [ ] [Review][Decision] **`Money.currency` en `&'static str`** — Empêche la désérialisation depuis la DB et toute valeur dynamique. Choix : garder `&'static str` (ok si uniquement EUR), passer à `String`, ou créer un enum `Currency` ? [`crates/shared-kernel/src/money.rs:8`]
+
+### Correctifs (patch)
+
+- [ ] [Review][Patch] **`PgPool::connect` sans configuration de pool** — Aucun timeout, taille de pool ou max_connections configurés. Utiliser `PgPoolOptions::new()` avec des valeurs raisonnables. [`crates/app-server/src/db.rs:5`]
+- [ ] [Review][Patch] **`JWT_SECRET` sans validation de longueur minimale** — La valeur est acceptée telle quelle, même si très courte. Ajouter une vérification `>= 32 chars` à la lecture. [`crates/app-server/src/config.rs:27`]
+- [ ] [Review][Patch] **`EventEnvelope<T>` manque le bound `Deserialize`** — La struct dérive `Deserialize` mais le bound générique ne l'impose pas sur `T`. Corriger : `T: Serialize + for<'de> Deserialize<'de>`. [`crates/shared-kernel/src/events.rs:18`]
+- [ ] [Review][Patch] **`PageParams` sans validation des valeurs limites** — `per_page=0` (division par zéro), `page=0` (numérotation conventionnelle 1-based), et débordement `page * per_page` sur u32 non gérés. Ajouter validation ou `new()` contraignant. [`crates/shared-kernel/src/pagination.rs:4-6`]
+- [ ] [Review][Patch] **`DATABASE_URL` chaîne vide acceptée** — `std::env::var` retourne Ok("") si la variable est définie vide. Ajouter `.filter(|s| !s.is_empty())` avant de l'utiliser. [`crates/app-server/src/config.rs:19`]
+- [ ] [Review][Patch] **`S3_ACCESS_KEY` et `S3_SECRET_KEY` absents de `AppConfig`** — Présents dans `.env.example` (lignes 8-9) mais non chargés dans la struct de configuration. Incohérence documentation/code. [`crates/app-server/src/config.rs`]
+- [ ] [Review][Patch] **`minio/minio:latest` sans tag de version fixe** — Risque de régression silencieuse à chaque `docker pull`. Fixer sur une version spécifique (ex: `RELEASE.2025-01-20T14-49-07Z`). [`docker-compose.yml:36`]
+- [ ] [Review][Patch] **MinIO sans healthcheck dans `docker-compose.yml`** — PostgreSQL et RabbitMQ ont des healthchecks, MinIO non. Ajouter un healthcheck `mc ready /data` ou équivalent. [`docker-compose.yml:35-42`]
+
+### Différés (defer)
+
+- [x] [Review][Defer] **`EventEnvelope.version` toujours `1` hardcodé** — Pas de stratégie de versioning d'events. Différé : sera adressé quand le bus d'events sera implémenté (Story 6+). [`crates/shared-kernel/src/events.rs:32`] — deferred, pre-existing
+- [x] [Review][Defer] **Newtype IDs sans `From<Uuid>` ni `Display`** — Utilisabilité limitée sans conversions. Différé : sera complété lors de l'implémentation domaine (Stories 2+). [`crates/shared-kernel/src/ids.rs`] — deferred, pre-existing
+- [x] [Review][Defer] **`JWT_ACCESS_TTL_SECONDS` / `JWT_REFRESH_TTL_SECONDS` absents de `AppConfig`** — Présents dans `.env.example` mais pas chargés. Différé : Story 2 (authentification). [`crates/app-server/src/config.rs`] — deferred, pre-existing
+- [x] [Review][Defer] **`depends_on` entre services Docker absent** — L'app-server (futur) pourrait démarrer avant que postgres/rabbitmq soient ready. Différé : à ajouter quand l'app-server sera déployé via Docker. [`docker-compose.yml`] — deferred, pre-existing
 
 ---
 

@@ -1,5 +1,5 @@
 use chrono::Utc;
-use serde::{Deserialize, Serialize};
+use serde::{de::DeserializeOwned, Deserialize, Serialize};
 use uuid::Uuid;
 
 /// Enveloppeur standard pour tous les domain events publiés sur RabbitMQ.
@@ -15,7 +15,8 @@ use uuid::Uuid;
 /// }
 /// ```
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct EventEnvelope<T: Serialize> {
+#[serde(bound(serialize = "T: Serialize", deserialize = "T: DeserializeOwned"))]
+pub struct EventEnvelope<T> {
     pub event_type: String,
     pub aggregate_id: Uuid,
     pub occurred_at: String, // ISO 8601 UTC
@@ -23,7 +24,7 @@ pub struct EventEnvelope<T: Serialize> {
     pub data: T,
 }
 
-impl<T: Serialize> EventEnvelope<T> {
+impl<T: Serialize + DeserializeOwned> EventEnvelope<T> {
     pub fn new(event_type: impl Into<String>, aggregate_id: Uuid, data: T) -> Self {
         Self {
             event_type: event_type.into(),
