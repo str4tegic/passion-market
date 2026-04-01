@@ -1,2 +1,7 @@
-// BC Identity — domaine pur, zéro dépendance infra (tokio/sqlx/axum interdits)
-// Implémentation : Story 2.1
+pub mod domain_services;
+pub mod errors;
+pub mod events;
+pub mod password_hash;
+pub mod ports;
+pub mod use_cases;
+pub mod user;
