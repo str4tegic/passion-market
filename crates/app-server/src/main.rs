@@ -1,7 +1,9 @@
 mod config;
 mod db;
+mod health;
 
 use anyhow::Result;
+use axum::Router;
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -22,8 +24,13 @@ async fn main() -> Result<()> {
     db::run_migrations(&pool).await?;
     tracing::info!("migrations applied successfully");
 
-    // TODO Story 2+ : démarrer le serveur axum avec les routers BC
-    tracing::info!("app-server ready — implémentation HTTP : Story 2+");
+    // TODO Story 2+ : ajouter les routers BC ici
+    let app = Router::new().merge(health::router());
+
+    let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", cfg.port)).await?;
+    tracing::info!("listening on 0.0.0.0:{}", cfg.port);
+
+    axum::serve(listener, app).await?;
 
     Ok(())
 }

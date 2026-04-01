@@ -35,7 +35,7 @@
 # - Dev moves story to 'review', then runs code-review (fresh context, different LLM recommended)
 
 generated: 2026-03-28
-last_updated: 2026-03-29T00:00:00Z
+last_updated: 2026-03-30T00:00:00Z
 project: passion-market
 project_key: NOKEY
 tracking_system: file-system
@@ -46,12 +46,12 @@ development_status:
   epic-1: in-progress
   1-1-workspace-cargo-et-environnement-docker-compose: done
   1-2-application-nextjs-16-et-proxy-vers-lapi-rust: review
-  1-3-ci-github-actions-et-deploiement-railway: backlog
+  1-3-ci-github-actions-et-deploiement-railway: review
   epic-1-retrospective: optional
 
   # Epic 2: Identité & Authentification
-  epic-2: backlog
-  2-1-domaine-identity-user-role-et-credentials-tdd: backlog
+  epic-2: in-progress
+  2-1-domaine-identity-user-role-et-credentials-tdd: ready-for-dev
   2-2-inscription-maker: backlog
   2-3-inscription-acheteur: backlog
   2-4-connexion-et-deconnexion: backlog

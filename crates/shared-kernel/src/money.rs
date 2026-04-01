@@ -16,7 +16,10 @@ pub struct Money {
 
 impl Money {
     pub fn eur(amount_cents: u64) -> Self {
-        Self { amount_cents, currency: Currency::EUR }
+        Self {
+            amount_cents,
+            currency: Currency::EUR,
+        }
     }
 
     pub fn zero() -> Self {

@@ -1,5 +1,5 @@
 use chrono::Utc;
-use serde::{de::DeserializeOwned, Deserialize, Serialize};
+use serde::{Deserialize, Serialize, de::DeserializeOwned};
 use uuid::Uuid;
 
 /// Enveloppeur standard pour tous les domain events publiés sur RabbitMQ.
