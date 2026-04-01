@@ -45,7 +45,7 @@ development_status:
   # Epic 1: Socle Projet & Environnement
   epic-1: in-progress
   1-1-workspace-cargo-et-environnement-docker-compose: done
-  1-2-application-nextjs-16-et-proxy-vers-lapi-rust: review
+  1-2-application-nextjs-16-et-proxy-vers-lapi-rust: done
   1-3-ci-github-actions-et-deploiement-railway: done
   epic-1-retrospective: optional
 

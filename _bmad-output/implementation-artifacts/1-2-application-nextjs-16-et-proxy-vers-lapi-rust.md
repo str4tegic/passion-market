@@ -7,7 +7,7 @@
 | **Story ID** | 1.2 |
 | **Story Key** | `1-2-application-nextjs-16-et-proxy-vers-lapi-rust` |
 | **Epic** | Epic 1 — Socle Projet & Environnement |
-| **Statut** | review |
+| **Statut** | done |
 | **Date de création** | 2026-03-28 |
 
 ---
@@ -518,11 +518,12 @@ Implémentation complétée le 2026-03-28 :
 
 - [x] [Review][Decision] **Version Next.js : spec alignée sur 15.x** — Next.js 16 n'existe pas. Spec mise à jour pour accepter 15.x (version LTS actuelle avec React 19). [`frontend/apps/web/package.json`] — résolu
 - [x] [Review][Decision] **`main: "./src/index.ts"` dans les package.json des packages** — Accepté pour l'instant (monorepo Next-only). Fonctionne via `transpilePackages`. **Bloquant pour Jest** — un build step (`dist/`) sera nécessaire en story 1.3 avant de configurer les tests. [`frontend/packages/api-client/package.json`, `ui`, `hooks`] — accepté, à adresser en 1.3
+- [x] [Review][Decision] **CA-2 spec dit `message`/`details` mais code utilise `title`/`detail` (RFC 7807)** — Choix délibéré : `ApiError` miroire le format RFC 7807 Problem Details retourné par le backend Rust. `error.message` est accessible via héritage `Error`. Spec mise à jour. — résolu, RFC 7807 conservé
 
 ### Correctifs (patch)
 
 - [x] [Review][Patch] **SSG non protégée — ajouter `export const dynamic = 'force-static'`** — Sans cette directive, un futur ajout de `cookies()` bascule silencieusement en SSR. CA-3 fragile. [`frontend/apps/web/src/app/page.tsx`] — corrigé
-- [ ] [Review][Patch] **Absence de timeout sur `fetch` — attente indéfinie** — Aucun `AbortController` / `signal`. Requêtes bloquées indéfiniment si le serveur Rust ne répond pas (coût en Serverless). [`frontend/packages/api-client/src/lib/fetch.ts`]
+- [x] [Review][Patch] **Absence de timeout sur `fetch` — attente indéfinie** — Aucun `AbortController` / `signal`. Requêtes bloquées indéfiniment si le serveur Rust ne répond pas (coût en Serverless). [`frontend/packages/api-client/src/lib/fetch.ts`] — corrigé
 - [x] [Review][Patch] **`apiGet` options spread permettait d'écraser `cache` et `method`** — `cache` et `method` désormais blacklistés du spread ; l'appelant ne peut plus les écraser. [`frontend/packages/api-client/src/lib/fetch.ts:32`] — corrigé
 - [x] [Review][Patch] **`apiPost`/`apiPatch` : `JSON.stringify` non protégé** — Objet circulaire ou BigInt lèvent un `TypeError` brut. Désormais capturé et converti en `ApiError(0, 'Serialization error', ...)`. [`frontend/packages/api-client/src/lib/fetch.ts`] — corrigé
 - [x] [Review][Patch] **`res.json()` échouait sur corps vide (204 No Content)** — `apiGet`, `apiPost`, `apiPatch` retournent désormais `undefined` sur status 204. [`frontend/packages/api-client/src/lib/fetch.ts`] — corrigé
@@ -530,6 +531,10 @@ Implémentation complétée le 2026-03-28 :
 - [x] [Review][Patch] **`parseError()` non robuste si corps non-JSON** — Déjà couvert par le `try/catch` dans `parseError()` — retourne `ApiError(res.status, res.statusText, '')` sur parse failure. [`frontend/packages/api-client/src/lib/fetch.ts:17-29`] — déjà corrigé dans l'implémentation
 - [x] [Review][Patch] **`API_URL` non validée — trailing slash** — `.env.example` contient un exemple canonique sans trailing slash (`http://localhost:3001`). Convention suffisante. [`frontend/apps/web/.env.example`] — ignoré, convention documentée
 - [x] [Review][Patch] **`MoneyDisplay` accepte des centimes négatifs, floats, NaN, Infinity** — Constructeur valide désormais : entier, positif ou nul, fini. Pas de montants négatifs dans le domaine (avoirs traités dans un champ séparé). [`frontend/packages/ui/src/lib/money.ts:10`] — corrigé
+- [x] [Review][Patch] **`JSON.stringify(undefined)` retourne `undefined` (pas `string`) dans `apiPost`/`apiPatch`** — Body envoyé silencieusement vide si `body` est `undefined`. Guard ajouté. [`frontend/packages/api-client/src/lib/fetch.ts`] — corrigé
+- [x] [Review][Patch] **204 retourne `undefined as T` — type lie** — Signature changée en `Promise<T | undefined>`. [`frontend/packages/api-client/src/lib/fetch.ts`] — corrigé
+- [x] [Review][Patch] **Code `0` dans `ApiError` pour erreur de sérialisation ambigu** — `0` collision avec erreur réseau (fetch failed). Remplacé par `-1`. [`frontend/packages/api-client/src/lib/fetch.ts`] — corrigé
+- [x] [Review][Patch] **`catch (e)` perd la stack trace dans sérialisation** — `String(e)` remplacé par `e instanceof Error ? e.message : String(e)`. [`frontend/packages/api-client/src/lib/fetch.ts`] — corrigé
 
 ### Différés (defer)
 
@@ -540,6 +545,9 @@ Implémentation complétée le 2026-03-28 :
 - [x] [Review][Defer] **Absence de CSP / headers de sécurité dans `next.config.ts`** — Important pour prod, hors scope story 1.2. À adresser en Story 1.3 (CI/CD) ou avant MVP. — deferred, hors scope
 - [x] [Review][Defer] **`eslint ^8.0.0` trop large** — Épingler à `^8.57.0` minimum. Risque faible. — deferred, low priority
 - [x] [Review][Defer] **`Intl.NumberFormat` crashe sur devise invalide** — Les devises viennent du backend Rust (enum `Currency`) — format ISO 4217 garanti. [`frontend/packages/ui/src/lib/money.ts:16-19`] — deferred, backend garantit le format
+- [x] [Review][Defer] **`API_URL` vs `NEXT_PUBLIC_API_URL` dans `next.config.ts`** — `API_URL` est lue côté serveur uniquement (dans next.config.ts). `NEXT_PUBLIC_` est pour les variables exposées au client. Design correct. [`frontend/apps/web/next.config.ts`] — deferred, design intentionnel
+- [x] [Review][Defer] **`MoneyDisplay` currency non validée** — Les devises viennent du backend Rust (enum `Currency`), format ISO 4217 garanti. Erreur `Intl.NumberFormat` impossible en pratique. [`frontend/packages/ui/src/lib/money.ts`] — deferred, backend garantit le format
+- [x] [Review][Defer] **`No Accept: application/json` header** — Pre-existing design. Ajout hors scope, backend Rust répond toujours JSON. — deferred, pre-existing
 
 ---
 
