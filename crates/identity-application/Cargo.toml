@@ -1,0 +1,13 @@
+[package]
+name = "identity-application"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+async-trait = "0.1"
+tokio = { version = "1", features = ["macros", "rt"] }
+shared-kernel = { workspace = true }
+serde = { workspace = true }
+uuid = { workspace = true }
+thiserror = { workspace = true }
+identity-domain = { workspace = true }

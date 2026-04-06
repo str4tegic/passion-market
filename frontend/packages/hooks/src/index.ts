@@ -1,3 +1,3 @@
 // Hooks React partagés (Story 2+)
-// export { useAuth } from './useAuth'
+export { useRegisterMaker } from './useRegisterMaker'
 // export { useCart } from './useCart'

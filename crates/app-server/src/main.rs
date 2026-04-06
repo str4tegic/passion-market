@@ -2,8 +2,15 @@ mod config;
 mod db;
 mod health;
 
+use std::sync::Arc;
+
 use anyhow::Result;
 use axum::Router;
+use identity_application::use_cases::RegisterUserUseCase;
+use identity_infra::{
+    argon2_hasher::Argon2PasswordHasher,
+    sqlx_user_repository::SqlxUserRepository,
+};
 
 #[tokio::main]
 async fn main() -> Result<()> {
@@ -24,8 +31,13 @@ async fn main() -> Result<()> {
     db::run_migrations(&pool).await?;
     tracing::info!("migrations applied successfully");
 
-    // TODO Story 2+ : ajouter les routers BC ici
-    let app = Router::new().merge(health::router());
+    let user_repo = Arc::new(SqlxUserRepository::new(pool.clone()));
+    let hasher = Arc::new(Argon2PasswordHasher);
+    let register_uc = Arc::new(RegisterUserUseCase::new(hasher, user_repo));
+
+    let app = Router::new()
+        .merge(health::router())
+        .merge(identity_api::identity_router(register_uc));
 
     let listener = tokio::net::TcpListener::bind(format!("0.0.0.0:{}", cfg.port)).await?;
     tracing::info!("listening on 0.0.0.0:{}", cfg.port);

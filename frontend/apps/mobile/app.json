@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Passion Market",
+    "slug": "passion-market-mobile",
+    "version": "1.0.0",
+    "scheme": "passion-market",
+    "orientation": "portrait",
+    "platforms": ["ios", "android"],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

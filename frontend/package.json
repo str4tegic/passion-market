@@ -9,12 +9,24 @@
     "dev": "nx run web:dev",
     "build": "nx run web:build",
     "lint": "nx run-many --target=lint --all",
-    "type-check": "nx run-many --target=type-check --all"
+    "type-check": "nx run-many --target=type-check --all",
+    "test": "vitest run --workspace vitest.workspace.ts",
+    "test:watch": "vitest --workspace vitest.workspace.ts"
   },
   "devDependencies": {
-    "nx": "^20.0.0",
-    "@nx/next": "^20.0.0",
     "@nx/js": "^20.0.0",
-    "typescript": "^5.3.0"
+    "@nx/next": "^20.0.0",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.0.0",
+    "@types/react": "^19.0.0",
+    "@vitest/coverage-v8": "^2.0.0",
+    "happy-dom": "^15.0.0",
+    "nx": "^20.0.0",
+    "typescript": "^5.3.0",
+    "vitest": "^2.0.0"
+  },
+  "dependencies": {
+    "expo-constants": "^18.0.13",
+    "expo-linking": "^8.0.11"
   }
 }
