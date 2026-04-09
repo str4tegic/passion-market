@@ -36,12 +36,22 @@ impl UserRepository for SqlxUserRepository {
             Some(r) => {
                 let role = match r.role.as_str() {
                     "Maker" => Role::Maker,
+                    "Buyer" => Role::Buyer,
                     "Admin" => Role::Admin,
-                    _ => Role::Buyer,
+                    other => {
+                        return Err(DomainError::ValidationError(format!(
+                            "unknown role in DB: {other}"
+                        )));
+                    }
                 };
                 let status = match r.status.as_str() {
                     "PendingValidation" => UserStatus::PendingValidation,
-                    _ => UserStatus::Active,
+                    "Active" => UserStatus::Active,
+                    other => {
+                        return Err(DomainError::ValidationError(format!(
+                            "unknown status in DB: {other}"
+                        )));
+                    }
                 };
                 Ok(Some(User::reconstitute(
                     IdentityId(r.id),
@@ -75,11 +85,20 @@ impl UserRepository for SqlxUserRepository {
             user.password_hash.0,
             role,
             status,
-            user.created_at.utc(),
+            user.created_at
+                .utc()
+                .map_err(|e| DomainError::ValidationError(e.to_string()))?,
         )
         .execute(&self.pool)
         .await
-        .map_err(|e| DomainError::ValidationError(e.to_string()))?;
+        .map_err(|e| {
+            if let sqlx::Error::Database(ref db_err) = e
+                && db_err.code().as_deref() == Some("23505")
+            {
+                return DomainError::Conflict("email already exists".to_string());
+            }
+            DomainError::ValidationError(e.to_string())
+        })?;
 
         Ok(())
     }

@@ -18,10 +18,10 @@ impl IsoDateTime {
         Ok(IsoDateTime(value))
     }
 
-    pub fn utc(&self) -> DateTime<Utc> {
+    pub fn utc(&self) -> Result<DateTime<Utc>, DateTimeError> {
         DateTime::parse_from_rfc3339(&self.0)
-            .expect("invalid date format")
-            .with_timezone(&Utc)
+            .map(|dt| dt.with_timezone(&Utc))
+            .map_err(|_| DateTimeError::ValidationError("invalid date format".to_string()))
     }
 }
 
@@ -46,7 +46,7 @@ mod tests {
     #[test]
     fn convert_into_utc_datetime() {
         let datetime = IsoDateTime::new("2026-04-01T00:00:00Z".to_string()).unwrap();
-        let utc_datetime: DateTime<Utc> = datetime.utc();
+        let utc_datetime: DateTime<Utc> = datetime.utc().unwrap();
 
         assert_eq!(
             utc_datetime,
