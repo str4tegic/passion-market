@@ -5,6 +5,7 @@ members = [
     "crates/catalog-infra",
     "crates/catalog-api",
     "crates/identity-domain",
+    "crates/identity-application",
     "crates/identity-infra",
     "crates/identity-api",
     "crates/order-domain",
@@ -62,12 +63,16 @@ aws-config = "1"
 # Config
 dotenvy = "0.15"
 
+# Security
+argon2 = "0.5"
+
 # Internal crates
 shared-kernel = { path = "crates/shared-kernel" }
 catalog-domain = { path = "crates/catalog-domain" }
 catalog-infra = { path = "crates/catalog-infra" }
 catalog-api = { path = "crates/catalog-api" }
 identity-domain = { path = "crates/identity-domain" }
+identity-application = { path = "crates/identity-application" }
 identity-infra = { path = "crates/identity-infra" }
 identity-api = { path = "crates/identity-api" }
 order-domain = { path = "crates/order-domain" }

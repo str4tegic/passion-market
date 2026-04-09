@@ -10,6 +10,20 @@ pub enum Role {
     Admin,
 }
 
+impl TryFrom<String> for Role {
+    type Error = DomainError;
+    fn try_from(value: String) -> Result<Self, Self::Error> {
+        match value.as_str() {
+            "Maker" => Ok(Role::Maker),
+            "Buyer" => Ok(Role::Buyer),
+            "Admin" => Ok(Role::Admin),
+            _ => Err(DomainError::ValidationError(format!(
+                "invalid role: {value}"
+            ))),
+        }
+    }
+}
+
 pub enum UserStatus {
     PendingValidation,
     Active,
@@ -54,6 +68,24 @@ impl User {
         };
 
         Ok((user, event))
+    }
+
+    pub fn reconstitute(
+        id: IdentityId,
+        email: String,
+        password_hash: PasswordHash,
+        role: Role,
+        status: UserStatus,
+        created_at: IsoDateTime,
+    ) -> Self {
+        Self {
+            id,
+            email,
+            password_hash,
+            role,
+            status,
+            created_at,
+        }
     }
 }
 

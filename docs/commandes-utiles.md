@@ -1,0 +1,1 @@
+export $(grep -v '^#' .env | xargs) pour charger les variables du .env en local 

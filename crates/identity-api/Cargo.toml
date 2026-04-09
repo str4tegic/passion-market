@@ -5,7 +5,9 @@ edition.workspace = true
 
 [dependencies]
 identity-domain = { workspace = true }
+identity-application = { workspace = true }
 shared-kernel = { workspace = true }
+async-trait = "0.1"
 axum = { workspace = true }
 tokio = { workspace = true }
 serde = { workspace = true }
@@ -15,3 +17,8 @@ thiserror = { workspace = true }
 tracing = { workspace = true }
 
 # NE PAS dépendre de identity-infra — injection via traits domaine (ports.rs)
+
+[dev-dependencies]
+tower = { workspace = true }
+tokio = { workspace = true }
+http-body-util = "0.1"

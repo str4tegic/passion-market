@@ -102,6 +102,7 @@ dependencies = [
  "catalog-infra",
  "dotenvy",
  "identity-api",
+ "identity-application",
  "identity-domain",
  "identity-infra",
  "order-api",
@@ -117,6 +118,18 @@ dependencies = [
  "tokio",
  "tracing",
  "tracing-subscriber",
+]
+
+[[package]]
+name = "argon2"
+version = "0.5.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3c3610892ee6e0cbce8ae2700349fcf8f98adb0dbfbee85aec3c9179d29cc072"
+dependencies = [
+ "base64ct",
+ "blake2",
+ "cpufeatures",
+ "password-hash",
 ]
 
 [[package]]
@@ -892,6 +905,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "843867be96c8daad0d758b57df9392b6d8d271134fce549de6ce169ff98a92af"
 dependencies = [
  "serde_core",
+]
+
+[[package]]
+name = "blake2"
+version = "0.10.6"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "46502ad458c9a52b69d4d4d32775c788b7a1b85e8bc9d482d92250fc0e3f8efe"
+dependencies = [
+ "digest",
 ]
 
 [[package]]
@@ -2057,14 +2079,31 @@ checksum = "3d3067d79b975e8844ca9eb072e16b31c3c1c36928edf9c6789548c524d0d954"
 name = "identity-api"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "axum",
+ "http-body-util",
+ "identity-application",
  "identity-domain",
  "serde",
  "serde_json",
  "shared-kernel",
  "thiserror",
  "tokio",
+ "tower",
  "tracing",
+ "uuid",
+]
+
+[[package]]
+name = "identity-application"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "identity-domain",
+ "serde",
+ "shared-kernel",
+ "thiserror",
+ "tokio",
  "uuid",
 ]
 
@@ -2083,7 +2122,10 @@ name = "identity-infra"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "argon2",
+ "async-trait",
  "chrono",
+ "identity-application",
  "identity-domain",
  "lapin",
  "serde",
@@ -2575,6 +2617,17 @@ dependencies = [
  "redox_syscall 0.5.18",
  "smallvec",
  "windows-link",
+]
+
+[[package]]
+name = "password-hash"
+version = "0.5.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "346f04948ba92c43e8469c1ee6736c7563d71012b17d40745260fe106aac2166"
+dependencies = [
+ "base64ct",
+ "rand_core 0.6.4",
+ "subtle",
 ]
 
 [[package]]

@@ -9,5 +9,5 @@ export type { PageParams, Page } from './types/common'
 // export * from './queries/makers'
 
 // Commands (Story 2+)
-// export * from './commands/auth'
+export * from './commands/auth'
 // export * from './commands/cart'

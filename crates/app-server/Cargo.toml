@@ -13,6 +13,7 @@ catalog-domain = { workspace = true }
 catalog-infra = { workspace = true }
 catalog-api = { workspace = true }
 identity-domain = { workspace = true }
+identity-application = { workspace = true }
 identity-infra = { workspace = true }
 identity-api = { workspace = true }
 order-domain = { workspace = true }

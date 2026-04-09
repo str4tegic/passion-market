@@ -1,2 +1,6 @@
 // BC Identity — handlers axum (thin HTTP adapters)
-// Implémentation : Story 2.2+
+pub mod errors;
+pub mod handlers;
+pub mod router;
+
+pub use router::identity_router;
