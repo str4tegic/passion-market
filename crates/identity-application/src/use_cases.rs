@@ -3,7 +3,6 @@ use std::sync::Arc;
 use identity_domain::{
     errors::DomainError,
     events::UserRegistered,
-    password_hash::PasswordHash,
     user::{Role, User},
 };
 
@@ -72,7 +71,7 @@ impl RegisterUserPort for RegisterUserUseCase {
             IsoDateTime::now(),
         )?;
 
-        let id = user.id.clone();
+        let id = user.id;
         self.user_repository.save(user).await?;
 
         Ok((id, event))
@@ -159,7 +158,7 @@ mod tests {
     #[tokio::test]
     async fn inscription_reussie_retourne_identity_id() {
         let result = make_uc(None).execute(cmd()).await;
-        assert!(matches!(result, Ok(_)));
+        assert!(result.is_ok());
     }
 
     #[tokio::test]

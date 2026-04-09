@@ -23,7 +23,7 @@ struct MockRegisterUserPort {
 impl RegisterUserPort for MockRegisterUserPort {
     async fn execute(
         &self,
-        command: RegisterUserCommand,
+        _command: RegisterUserCommand,
     ) -> Result<(IdentityId, UserRegistered), DomainError> {
         self.result.as_ref().map_err(|e| match e {
             DomainError::Conflict(msg) => DomainError::Conflict(msg.clone()),
