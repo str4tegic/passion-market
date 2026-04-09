@@ -53,7 +53,7 @@ development_status:
   epic-2: in-progress
   2-1-domaine-identity-user-role-et-credentials-tdd: done
   2-2-inscription-maker: done
-  2-3-inscription-acheteur: backlog
+  2-3-inscription-acheteur: ready-for-dev
   2-4-connexion-et-deconnexion: backlog
   2-5-reinitialisation-du-mot-de-passe: backlog
   epic-2-retrospective: optional
