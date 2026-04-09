@@ -71,15 +71,22 @@ impl User {
     }
 
     pub fn reconstitute(
-          id: IdentityId,
-          email: String,
-          password_hash: PasswordHash,
-          role: Role,
-          status: UserStatus,
-          created_at: IsoDateTime,
-      ) -> Self {
-          Self { id, email, password_hash, role, status, created_at }
-      }
+        id: IdentityId,
+        email: String,
+        password_hash: PasswordHash,
+        role: Role,
+        status: UserStatus,
+        created_at: IsoDateTime,
+    ) -> Self {
+        Self {
+            id,
+            email,
+            password_hash,
+            role,
+            status,
+            created_at,
+        }
+    }
 }
 
 #[cfg(test)]

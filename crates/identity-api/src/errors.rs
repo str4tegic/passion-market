@@ -1,7 +1,7 @@
 use axum::{
+    Json,
     http::StatusCode,
     response::{IntoResponse, Response},
-    Json,
 };
 use identity_domain::errors::DomainError;
 use serde_json::json;
@@ -27,16 +27,31 @@ impl IntoResponse for ApiError {
 impl From<DomainError> for ApiError {
     fn from(e: DomainError) -> Self {
         match e {
-            DomainError::Conflict(msg) =>
-                ApiError { status: StatusCode::CONFLICT, title: "Conflict", detail: msg },
-            DomainError::ValidationError(msg) =>
-                ApiError { status: StatusCode::UNPROCESSABLE_ENTITY, title: "Unprocessable Entity", detail: msg },
-            DomainError::NotFound =>
-                ApiError { status: StatusCode::NOT_FOUND, title: "Not Found", detail: "resource not found".into() },
-            DomainError::Unauthorized =>
-                ApiError { status: StatusCode::UNAUTHORIZED, title: "Unauthorized", detail: "unauthorized".into() },
-            DomainError::Forbidden =>
-                ApiError { status: StatusCode::FORBIDDEN, title: "Forbidden", detail: "forbidden".into() },
+            DomainError::Conflict(msg) => ApiError {
+                status: StatusCode::CONFLICT,
+                title: "Conflict",
+                detail: msg,
+            },
+            DomainError::ValidationError(msg) => ApiError {
+                status: StatusCode::UNPROCESSABLE_ENTITY,
+                title: "Unprocessable Entity",
+                detail: msg,
+            },
+            DomainError::NotFound => ApiError {
+                status: StatusCode::NOT_FOUND,
+                title: "Not Found",
+                detail: "resource not found".into(),
+            },
+            DomainError::Unauthorized => ApiError {
+                status: StatusCode::UNAUTHORIZED,
+                title: "Unauthorized",
+                detail: "unauthorized".into(),
+            },
+            DomainError::Forbidden => ApiError {
+                status: StatusCode::FORBIDDEN,
+                title: "Forbidden",
+                detail: "forbidden".into(),
+            },
         }
     }
 }
@@ -53,7 +68,9 @@ mod tests {
 
     #[test]
     fn validation_error_mappe_vers_422() {
-        let err = ApiError::from(DomainError::ValidationError("mot de passe trop court".into()));
+        let err = ApiError::from(DomainError::ValidationError(
+            "mot de passe trop court".into(),
+        ));
         assert_eq!(err.status, StatusCode::UNPROCESSABLE_ENTITY);
     }
 

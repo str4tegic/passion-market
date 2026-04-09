@@ -8,8 +8,7 @@ use anyhow::Result;
 use axum::Router;
 use identity_application::use_cases::RegisterUserUseCase;
 use identity_infra::{
-    argon2_hasher::Argon2PasswordHasher,
-    sqlx_user_repository::SqlxUserRepository,
+    argon2_hasher::Argon2PasswordHasher, sqlx_user_repository::SqlxUserRepository,
 };
 
 #[tokio::main]

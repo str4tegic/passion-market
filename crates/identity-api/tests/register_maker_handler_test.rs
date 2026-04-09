@@ -1,16 +1,18 @@
 use std::sync::Arc;
 
 use async_trait::async_trait;
-use axum::{body::Body, http::{Request, StatusCode}};
+use axum::{
+    body::Body,
+    http::{Request, StatusCode},
+};
 use http_body_util::BodyExt;
 use identity_api::identity_router;
 use identity_application::{ports::RegisterUserPort, use_cases::RegisterUserCommand};
-use identity_domain::{
-    errors::DomainError,
-    events::UserRegistered,
-    user::Role,
+use identity_domain::{errors::DomainError, events::UserRegistered, user::Role};
+use shared_kernel::{
+    ids::{IdentityId, new_id},
+    iso_date_time::IsoDateTime,
 };
-use shared_kernel::{ids::{IdentityId, new_id}, iso_date_time::IsoDateTime};
 use tower::ServiceExt;
 
 struct MockRegisterUserPort {

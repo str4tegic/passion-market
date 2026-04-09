@@ -1,5 +1,7 @@
 use async_trait::async_trait;
-use identity_domain::{errors::DomainError, events::UserRegistered, password_hash::PasswordHash, user::User};
+use identity_domain::{
+    errors::DomainError, events::UserRegistered, password_hash::PasswordHash, user::User,
+};
 use shared_kernel::ids::IdentityId;
 
 use crate::use_cases::RegisterUserCommand;

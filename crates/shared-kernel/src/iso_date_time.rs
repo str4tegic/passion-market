@@ -1,5 +1,5 @@
-use serde::{Deserialize, Serialize};
 use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
 
 use crate::errors::DateTimeError;
 
@@ -12,7 +12,6 @@ impl IsoDateTime {
     }
 
     pub fn new(value: String) -> Result<Self, DateTimeError> {
-
         chrono::DateTime::parse_from_rfc3339(&value)
             .map_err(|_| DateTimeError::ValidationError("invalid date format".to_string()))?;
 
@@ -49,7 +48,10 @@ mod tests {
         let datetime = IsoDateTime::new("2026-04-01T00:00:00Z".to_string()).unwrap();
         let utc_datetime: DateTime<Utc> = datetime.utc();
 
-        assert_eq!(utc_datetime, chrono::Utc.with_ymd_and_hms(2026, 4, 1, 0, 0, 0).unwrap());
+        assert_eq!(
+            utc_datetime,
+            chrono::Utc.with_ymd_and_hms(2026, 4, 1, 0, 0, 0).unwrap()
+        );
     }
 
     #[test]

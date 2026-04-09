@@ -7,7 +7,10 @@ use identity_domain::{
     user::{Role, User},
 };
 
-use shared_kernel::{ids::{IdentityId, new_id}, iso_date_time::IsoDateTime};
+use shared_kernel::{
+    ids::{IdentityId, new_id},
+    iso_date_time::IsoDateTime,
+};
 
 use crate::{
     ports::{PasswordHasher, RegisterUserPort, UserRepository},
@@ -29,7 +32,11 @@ pub struct RegisterUserCommand {
 impl RegisterUserCommand {
     pub fn new(email: String, password: String, role: String) -> Result<Self, DomainError> {
         let role = Role::try_from(role)?;
-        Ok(Self { email, password, role })
+        Ok(Self {
+            email,
+            password,
+            role,
+        })
     }
 }
 
@@ -39,13 +46,20 @@ impl RegisterUserUseCase {
         user_repository: Arc<dyn UserRepository>,
     ) -> Self {
         let email_checker = Arc::new(UniqueEmailSpecification::new(Arc::clone(&user_repository)));
-        Self { password_hasher, user_repository, email_checker }
+        Self {
+            password_hasher,
+            user_repository,
+            email_checker,
+        }
     }
 }
 
 #[async_trait::async_trait]
 impl RegisterUserPort for RegisterUserUseCase {
-    async fn execute(&self, command: RegisterUserCommand) -> Result<(IdentityId, UserRegistered), DomainError> {
+    async fn execute(
+        &self,
+        command: RegisterUserCommand,
+    ) -> Result<(IdentityId, UserRegistered), DomainError> {
         self.email_checker.is_satisfied_by(&command.email).await?;
 
         let password_hash = self.password_hasher.hash_password(&command.password)?;
@@ -68,9 +82,14 @@ impl RegisterUserPort for RegisterUserUseCase {
 #[cfg(test)]
 mod tests {
     use async_trait::async_trait;
-    use identity_domain::{password_hash::PasswordHash, user::{Role, User, UserStatus}};
-    use shared_kernel::{ids::{IdentityId, new_id}, iso_date_time::IsoDateTime};
-
+    use identity_domain::{
+        password_hash::PasswordHash,
+        user::{Role, User, UserStatus},
+    };
+    use shared_kernel::{
+        ids::{IdentityId, new_id},
+        iso_date_time::IsoDateTime,
+    };
 
     use super::*;
 
@@ -115,7 +134,9 @@ mod tests {
         RegisterUserUseCase {
             password_hasher: Arc::new(MockPasswordHasher),
             user_repository: Arc::clone(&repo) as Arc<dyn UserRepository>,
-            email_checker: Arc::new(UniqueEmailSpecification::new(Arc::clone(&repo) as Arc<dyn UserRepository>)),
+            email_checker: Arc::new(UniqueEmailSpecification::new(
+                Arc::clone(&repo) as Arc<dyn UserRepository>
+            )),
         }
     }
 

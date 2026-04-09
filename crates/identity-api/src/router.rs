@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use axum::{routing::post, Router};
+use axum::{Router, routing::post};
 use identity_application::ports::RegisterUserPort;
 
 use crate::handlers::register_maker::register_maker;

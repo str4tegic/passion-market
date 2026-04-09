@@ -1,4 +1,7 @@
-use argon2::{Argon2, PasswordHasher as _, password_hash::{SaltString, rand_core::OsRng}};
+use argon2::{
+    Argon2, PasswordHasher as _,
+    password_hash::{SaltString, rand_core::OsRng},
+};
 use identity_application::ports::PasswordHasher;
 use identity_domain::{errors::DomainError, password_hash::PasswordHash};
 
